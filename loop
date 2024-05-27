@@ -1,0 +1,25 @@
+import torch.optim as optim
+
+# 假设我们已经定义了encoder, depth_decoder, confidence_decoder
+model = DepthConfidenceNet(encoder, depth_decoder, confidence_decoder).cuda()
+optimizer = optim.Adam(model.parameters(), lr=1e-4)
+
+for epoch in range(num_epochs):
+    for batch in dataloader:
+        images = batch['images'].cuda()
+        target_images = batch['target_images'].cuda()
+
+        depth, confidence = model(images)
+        reconstructed_images = warp_image(images, depth, baseline, focal_length)
+
+        reconstruction_loss_value = reconstruction_loss(reconstructed_images, target_images)
+        smoothness_loss_value = smoothness_loss(depth, images)
+        confidence_weighted_loss_value = confidence_weighted_loss(reconstruction_loss_value, confidence)
+
+        loss = confidence_weighted_loss_value + smoothness_loss_value
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        print(f"Epoch {epoch}, Loss: {loss.item()}")
