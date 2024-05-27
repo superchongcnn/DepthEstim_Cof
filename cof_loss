@@ -1,0 +1,2 @@
+def confidence_weighted_loss(reconstruction_loss, confidence):
+    return torch.mean(reconstruction_loss * confidence)
