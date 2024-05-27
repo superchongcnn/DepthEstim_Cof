@@ -1,0 +1,11 @@
+def smoothness_loss(depth, image):
+    grad_depth_x = torch.abs(depth[:, :, :, :-1] - depth[:, :, :, 1:])
+    grad_depth_y = torch.abs(depth[:, :, :-1, :] - depth[:, :, 1:, :])
+    
+    grad_image_x = torch.mean(torch.abs(image[:, :, :, :-1] - image[:, :, :, 1:]), 1, keepdim=True)
+    grad_image_y = torch.mean(torch.abs(image[:, :, :-1, :] - image[:, :, 1:, :]), 1, keepdim=True)
+    
+    smoothness_x = grad_depth_x * torch.exp(-grad_image_x)
+    smoothness_y = grad_depth_y * torch.exp(-grad_image_y)
+    
+    return torch.mean(smoothness_x) + torch.mean(smoothness_y)
