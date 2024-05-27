@@ -1,0 +1,4 @@
+def reconstruction_loss(reconstructed_image, target_image):
+    l1_loss = torch.mean(torch.abs(reconstructed_image - target_image))
+    ssim_loss = torch.mean((1 - ssim(reconstructed_image, target_image)) / 2)
+    return l1_loss + ssim_loss
