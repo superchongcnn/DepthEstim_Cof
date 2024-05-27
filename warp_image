@@ -1,0 +1,15 @@
+def warp_image(image, depth, baseline, focal_length):
+    B, C, H, W = image.size()
+    grid_x, grid_y = torch.meshgrid(torch.arange(0, W), torch.arange(0, H))
+    grid_x = grid_x.float().unsqueeze(0).expand(B, -1, -1).cuda()
+    grid_y = grid_y.float().unsqueeze(0).expand(B, -1, -1).cuda()
+
+    disparity = baseline * focal_length / (depth + 1e-6)
+    new_grid_x = grid_x - disparity
+    new_grid = torch.stack((new_grid_x, grid_y), dim=3)
+
+    new_grid[:, :, :, 0] = 2.0 * new_grid[:, :, :, 0] / (W - 1) - 1.0
+    new_grid[:, :, :, 1] = 2.0 * new_grid[:, :, :, 1] / (H - 1) - 1.0
+
+    output = nn.functional.grid_sample(image, new_grid, mode='bilinear', padding_mode='border')
+    return output
