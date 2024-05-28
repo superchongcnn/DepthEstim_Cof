@@ -1,0 +1,25 @@
+import torch
+import torch.nn as nn
+import torch.optim as optim
+
+# 定义损失函数
+def loss_function(depth_pred, depth_true, confidence):
+    photo_loss = photometric_loss(depth_pred, depth_true)
+    smooth_loss = smoothness_loss(depth_pred)
+    weighted_loss = torch.mean(confidence * photo_loss)
+    total_loss = weighted_loss + smooth_loss
+    return total_loss
+
+# 初始化模型和优化器
+model = SiameseDepthNet()
+optimizer = optim.Adam(model.parameters(), lr=0.001)
+
+# 训练循环
+for epoch in range(num_epochs):
+    for batch in dataloader:
+        images, target_depths = batch
+        optimizer.zero_grad()
+        pred_depths, confidences = model(images)
+        loss = loss_function(pred_depths, target_depths, confidences)
+        loss.backward()
+        optimizer.step()
