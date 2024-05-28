@@ -1,0 +1,14 @@
+import numpy as np
+
+# 模拟的深度预测结果和置信度
+depth_map = np.array([[2.5, 3.0, 2.8], [3.2, 2.9, 2.7], [3.1, 3.4, 3.0]])
+confidence_map = np.array([[0.9, 0.6, 0.7], [0.8, 0.5, 0.9], [0.85, 0.7, 0.6]])
+
+# 设定置信度阈值
+confidence_threshold = 0.7
+
+# 过滤掉低置信度的深度值
+filtered_depth_map = np.where(confidence_map >= confidence_threshold, depth_map, np.nan)
+
+print("Filtered Depth Map:")
+print(filtered_depth_map)
