@@ -1,0 +1,14 @@
+class DepthCompletionNet(nn.Module):
+    def __init__(self):
+        super(DepthCompletionNet, self).__init__()
+        self.encoder = Encoder()
+        self.decoder = Decoder()
+
+    def forward(self, depth_map, rgb_image):
+        features = self.encoder(torch.cat([depth_map, rgb_image], dim=1))
+        completed_depth = self.decoder(features)
+        return completed_depth
+
+# Example usage:
+completion_net = DepthCompletionNet()
+completed_depth = completion_net(low_conf_depth_map, rgb_image)
