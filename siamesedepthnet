@@ -1,0 +1,24 @@
+class SiameseDepthNet(nn.Module):
+    def __init__(self):
+        super(SiameseDepthNet, self).__init__()
+        self.encoder = Encoder()  # 共享编码器
+        self.depth_decoder = DepthDecoder()  # 深度解码器
+        self.confidence_decoder = ConfidenceDecoder()  # 置信度解码器
+
+    def forward(self, x):
+        features = self.encoder(x)
+        depth = self.depth_decoder(features)
+        confidence = self.confidence_decoder(features)
+        return depth, confidence
+
+class Encoder(nn.Module):
+    # 定义编码器层
+    pass
+
+class DepthDecoder(nn.Module):
+    # 定义深度解码器层
+    pass
+
+class ConfidenceDecoder(nn.Module):
+    # 定义置信度解码器层
+    pass
