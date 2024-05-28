@@ -1,0 +1,15 @@
+def dynamic_depth_estimation(frame, prev_depth_map, prev_confidence_map, model):
+    # 对当前帧进行深度估计
+    depth_map, confidence_map = model(frame)
+    
+    # 对高置信度区域，使用前一帧的深度估计值
+    high_conf_mask = prev_confidence_map > 0.5
+    depth_map[high_conf_mask] = prev_depth_map[high_conf_mask]
+    
+    # 对低置信度区域，进行插值或深度完成
+    depth_map = interpolate_depth(depth_map, confidence_map)
+    
+    return depth_map, confidence_map
+
+# Example usage:
+depth_map, confidence_map = dynamic_depth_estimation(current_frame, prev_depth_map, prev_confidence_map, model)
