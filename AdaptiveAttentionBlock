@@ -1,0 +1,19 @@
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+class AdaptiveAttentionBlock(nn.Module):
+    def __init__(self, F_g, F_l):
+        super(AdaptiveAttentionBlock, self).__init__()
+        self.global_avg_pool = nn.AdaptiveAvgPool2d(1)
+        self.fc = nn.Sequential(
+            nn.Linear(F_g + F_l, 1),
+            nn.Sigmoid()
+        )
+
+    def forward(self, g, x):
+        g1 = self.global_avg_pool(g).view(g.size(0), -1)
+        x1 = self.global_avg_pool(x).view(x.size(0), -1)
+        alpha = self.fc(torch.cat([g1, x1], dim=1))
+        alpha = alpha.view(g.size(0), 1, 1, 1)
+        return x * alpha
