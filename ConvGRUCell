@@ -1,0 +1,61 @@
+import torch
+import torch.nn as nn
+
+class ConvGRUCell(nn.Module):
+    def __init__(self, input_dim, hidden_dim, kernel_size, bias=True):
+        super(ConvGRUCell, self).__init__()
+
+        self.input_dim = input_dim
+        self.hidden_dim = hidden_dim
+
+        self.kernel_size = kernel_size
+        self.padding = kernel_size // 2
+        self.bias = bias
+
+        self.conv_z = nn.Conv2d(in_channels=self.input_dim + self.hidden_dim,
+                                out_channels=self.hidden_dim,
+                                kernel_size=self.kernel_size,
+                                padding=self.padding,
+                                bias=self.bias)
+        self.conv_r = nn.Conv2d(in_channels=self.input_dim + self.hidden_dim,
+                                out_channels=self.hidden_dim,
+                                kernel_size=self.kernel_size,
+                                padding=self.padding,
+                                bias=self.bias)
+        self.conv_h = nn.Conv2d(in_channels=self.input_dim + self.hidden_dim,
+                                out_channels=self.hidden_dim,
+                                kernel_size=self.kernel_size,
+                                padding=self.padding,
+                                bias=self.bias)
+
+    def forward(self, input_tensor, h_cur):
+        combined = torch.cat([input_tensor, h_cur], dim=1)
+
+        z_t = torch.sigmoid(self.conv_z(combined))
+        r_t = torch.sigmoid(self.conv_r(combined))
+
+        combined_r = torch.cat([input_tensor, r_t * h_cur], dim=1)
+        h_tilde = torch.tanh(self.conv_h(combined_r))
+
+        h_next = (1 - z_t) * h_cur + z_t * h_tilde
+
+        return h_next
+
+    def init_hidden(self, batch_size, image_size):
+        height, width = image_size
+        return torch.zeros(batch_size, self.hidden_dim, height, width, device=self.conv_z.weight.device)
+
+# 示例用法
+input_dim = 1  # 输入通道数（例如灰度图）
+hidden_dim = 16  # 隐藏状态通道数
+kernel_size = 3  # 卷积核大小
+
+conv_gru_cell = ConvGRUCell(input_dim, hidden_dim, kernel_size)
+batch_size = 2
+image_size = (64, 64)  # 图像大小
+
+input_tensor = torch.randn(batch_size, input_dim, *image_size)  # 随机生成输入图像
+hidden_state = conv_gru_cell.init_hidden(batch_size, image_size)
+
+# 前向传播
+output = conv_gru_cell(input_tensor, hidden_state)
