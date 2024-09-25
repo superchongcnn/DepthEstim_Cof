@@ -41,9 +41,18 @@ python run.py --encoder DepthEstim_Cof --img-path assets/examples --outdir depth
 
 ### Datasets
 
+![image](https://github.com/user-attachments/assets/53ed9a72-2a7c-49fb-a75d-b1cf3cb4687c)
 
 
 
 #### Others maybe used
+• For the OASIS database, keywords (medical image fusion) AND (OASIS OR https://www.oasis-brains.org/) were used, from which 18 research articles were extracted.
 
+• For the AANLIB database, keywords (medical image fusion) AND (AANLIB OR Harvard medical OR http://www.med.harvard.edu/ AANLIB/home.html) were used. It can be observed that most of the articles used this database because it contains a variety of modalities and is easy to use. Most articles on medical image fusion were obtained from this database compared to the other four.
+
+• For the ADNI database, keywords (medical image fusion) AND (ADNI OR http://adni.loni.usc.edu/) were used.
+
+• For the TCIA database, keywords (medical image fusion) AND (tcia OR cancer imaging archive OR https://www.cancerimagingarchive. net/) were searched.
+
+• For the MIDAS database, keywords (medical image fusion) AND (RIRE OR https://www.insight-journal.org/) were utilized.
 
