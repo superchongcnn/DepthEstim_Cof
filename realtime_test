@@ -1,0 +1,5 @@
+pred = superglue(data)
+
+flops, params=profile(superglue, input=(data,))
+print('Computational complexity:', flops / le9)
+print('Number of parameters:', params / le6)
