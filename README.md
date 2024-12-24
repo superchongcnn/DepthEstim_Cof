@@ -1,3 +1,7 @@
+## Code Version Release 
+The entire project code release depends on the progress of some other projects. And we need to refactor the code, prepare the license for any potential commercial usage, and detailed and formatted documentation for better understanding the pipeline and code.
+
+## About the Code
 This library is the paper "A Monocular Medical Endoscopic Images Depth Estimation Method Based on a Confidence-Guided Dual-Branch Siamese. Network key code.
 The hardware configuration for model training and experiments includes a GPU RTX 4090 with 24.0GB of VRAM, a 14-core AMD EPYC 7453 CPU, 64.4GB of RAM, and a
 451.0GB hard drive. The software environment consists of PyTorch 2.0.1, TensorFlow 2.13.0, and Python 3.10.12.
